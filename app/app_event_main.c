@@ -26,6 +26,7 @@
 
 #include <string.h>
 #include "stringx.h"
+#include "stdconst.h"
 /**************************************************************************************************
  * TYPE DEFINES
  **************************************************************************************************/
@@ -83,6 +84,8 @@ extern void app_event_main_por( void )
     hal_cli_print_str( HARDWARE_VER );
     hal_cli_print_str( "\r\n" );
 
+    hal_headphone_init();
+    
     hal_vr_init();
     hal_ms6715_init();
     hal_ms6715_set_vol( HAL_MS6715_VOL_MAX );
@@ -96,6 +99,7 @@ extern void app_event_main_por( void )
     app_info.treble_level = 0;
     app_info.bass_vr_pos = 0;
     app_info.treble_vr_pos = 0;
+    app_info.headphone_enable = FALSE;
 
     osal_event_set( TASK_ID_APP_MAIN, TASK_EVT_APP_MAIN_IDLE_PROCESS );
 }
@@ -168,6 +172,25 @@ extern void app_event_main_idle_process( void )
         hal_cli_print_uint( app_info.treble_vr_pos );
         hal_cli_print_str( ".\r\n" );
         hal_ms6715_set_treble( app_info.treble_level );
+    }
+
+    if( app_info.headphone_enable )
+    {
+        if( !hal_headphone_inserted() )
+        {
+            app_info.headphone_enable = FALSE;
+            hal_headphone_disable_power_amp();
+            hal_cli_print_str( "Disable PA.\r\n" );
+        }
+    }
+    else
+    {
+        if( hal_headphone_inserted() )
+        {
+            app_info.headphone_enable = TRUE;
+            hal_headphone_enable_power_amp();
+            hal_cli_print_str( "Enable PA.\r\n" );
+        }
     }
     
 }

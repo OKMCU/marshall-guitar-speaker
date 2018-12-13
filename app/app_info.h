@@ -26,6 +26,7 @@ typedef struct app_info_t {
     int8_t treble_level;
     uint16_t bass_vr_pos;
     uint16_t treble_vr_pos;
+    uint8_t headphone_enable;
 } APP_INFO_t;
 /* ------------------------------------------------------------------------------------------------
  *                                           CONSTANTS

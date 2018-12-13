@@ -1,6 +1,6 @@
 /******************************************************************************
 
- @file  hal.h
+ @file  hal_headphone.h
 
  @brief Describe the purpose and contents of the file.
 
@@ -14,22 +14,14 @@
  Release Date: 
  *****************************************************************************/
 
-#ifndef __HAL_H__
-#define __HAL_H__
+#ifndef __HAL_HEADPHONE_H__
+#define __HAL_HEADPHONE_H__
 
-#include "hal_config.h"
-#include "hal_assert.h"
-#include "hal_drivers.h"
-#include "hal_mcu.h"
-#include "hal_cli.h"
-#include "hal_vr.h"
-#include "hal_ms6715.h"
-#include "hal_headphone.h"
+#include <stdint.h>
 /* ------------------------------------------------------------------------------------------------
  *                                           Macros
  * ------------------------------------------------------------------------------------------------
  */
-
 /* ------------------------------------------------------------------------------------------------
  *                                          Prototypes
  * ------------------------------------------------------------------------------------------------
@@ -41,7 +33,11 @@
 /**************************************************************************************************
  *                                        FUNCTIONS - API
  **************************************************************************************************/
-//extern void hal_init( void );
+
+extern void hal_headphone_init( void );
+extern uint8_t hal_headphone_inserted( void );
+extern void hal_headphone_enable_power_amp( void );
+extern void hal_headphone_disable_power_amp( void );
 
 #endif
 
