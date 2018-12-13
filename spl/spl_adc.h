@@ -49,6 +49,7 @@
 #define     SPL_ADC_CH_BANDGAP           8
 #endif
 
+#define SPL_ADC_VALUE_MAX                4095
 
 extern uint16_t spl_adc_read( uint8_t ch );
 
