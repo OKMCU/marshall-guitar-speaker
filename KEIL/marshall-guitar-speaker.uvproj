@@ -400,6 +400,11 @@
               <FileType>1</FileType>
               <FilePath>..\spl\spl_adc.c</FilePath>
             </File>
+            <File>
+              <FileName>spl_i2c.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\spl\spl_i2c.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -429,6 +434,11 @@
               <FileName>hal_vr.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\hal\hal_vr.c</FilePath>
+            </File>
+            <File>
+              <FileName>hal_ms6715.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\hal\hal_ms6715.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -20,27 +20,28 @@
 
 #include <stdint.h>
 
+#define SPL_SYS_CLOCK                       16000000
 #define SPL_MCU_XTAL_EN                     0
 #define SPL_UART_EN                         1
 #define SPL_UART0_EN                        1
 #define SPL_UART1_EN                        0
 #define SPL_GPIO_EN                         1
-#define SPL_I2C_EN                          0
-#define SPL_I2C_MASTER_EN                   0
+#define SPL_I2C_EN                          1
+#define SPL_I2C_MASTER_EN                   1
 #define SPL_I2C_SLAVE_EN                    0
 #define SPL_EXTINT_EN                       0
 #define SPL_EXTINT0_EN                      0
 #define SPL_EXTINT1_EN                      0
 #define SPL_ADC_EN                          1
-#define SPL_ADC_CH0_EN                      1
-#define SPL_ADC_CH1_EN                      1
-#define SPL_ADC_CH2_EN                      1
-#define SPL_ADC_CH3_EN                      1
+#define SPL_ADC_CH0_EN                      0
+#define SPL_ADC_CH1_EN                      0
+#define SPL_ADC_CH2_EN                      0
+#define SPL_ADC_CH3_EN                      0
 #define SPL_ADC_CH4_EN                      1
-#define SPL_ADC_CH5_EN                      1
-#define SPL_ADC_CH6_EN                      1
+#define SPL_ADC_CH5_EN                      0
+#define SPL_ADC_CH6_EN                      0
 #define SPL_ADC_CH7_EN                      1
-#define SPL_ADC_BANDGAP_EN                  1
+#define SPL_ADC_BANDGAP_EN                  0
 
 
 

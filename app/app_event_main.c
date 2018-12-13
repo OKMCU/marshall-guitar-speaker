@@ -56,6 +56,11 @@ extern void app_event_main_por( void )
     hal_cli_print_str( "\r\n" );
 
     hal_vr_init();
+    hal_ms6715_init();
+    hal_ms6715_set_vol( HAL_MS6715_VOL_MAX );
+    hal_ms6715_set_voll( HAL_MS6715_VOL_LR_MAX );
+    hal_ms6715_set_volr( HAL_MS6715_VOL_LR_MAX );
+    hal_ms6715_set_loudness( HAL_MS6715_LOUDNESS_ON );
 
     osal_event_set( TASK_ID_APP_MAIN, TASK_EVT_APP_MAIN_READ_VR );
 }
@@ -65,13 +70,13 @@ extern void app_event_main_read_vr( void )
     uint16_t u16tmp;
     
     u16tmp = hal_vr_read( HAL_VR_0 );
-    hal_cli_print_str( "VR0=" );
-    hal_cli_print_uint( u16tmp );
-    hal_cli_print_str( ";" );
+    //hal_cli_print_str( "VR0=" );
+    //hal_cli_print_uint( u16tmp );
+    //hal_cli_print_str( ";" );
     u16tmp = hal_vr_read( HAL_VR_1 );
-    hal_cli_print_str( "VR1=" );
-    hal_cli_print_uint( u16tmp );
-    hal_cli_print_str( "\r\n" );
+    //hal_cli_print_str( "VR1=" );
+    //hal_cli_print_uint( u16tmp );
+    //hal_cli_print_str( "\r\n" );
     
     osal_event_set( TASK_ID_APP_MAIN, TASK_EVT_APP_MAIN_READ_VR );
 }

@@ -42,8 +42,8 @@ extern void hal_mcu_init( void )
 #endif
 
 #if (SPL_I2C_MASTER_EN > 0 || SPL_I2C_SLAVE_EN > 0)
-    spl_i2c_init( SPL_I2C_PORT_0 );
-    spl_i2c_open( SPL_I2C_PORT_0 );
+    spl_i2c_init();
+    spl_i2c_open();
 #endif
 
 #if (SPL_EXTINT_EN > 0)

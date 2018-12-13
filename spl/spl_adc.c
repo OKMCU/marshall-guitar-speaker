@@ -67,7 +67,7 @@ extern uint16_t spl_adc_read( uint8_t ch )
             Enable_ADC_AIN7;
         break;
 #endif
-#if (SPL_ADC_CH_BANDGAP > 0)
+#if (SPL_ADC_BANDGAP_EN > 0)
         default:
             Enable_ADC_BandGap;
         break;
