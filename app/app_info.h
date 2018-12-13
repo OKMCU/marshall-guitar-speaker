@@ -22,7 +22,10 @@
 
 
 typedef struct app_info_t {
-    uint8_t tmp;
+    int8_t bass_level;
+    int8_t treble_level;
+    uint16_t bass_vr_pos;
+    uint16_t treble_vr_pos;
 } APP_INFO_t;
 /* ------------------------------------------------------------------------------------------------
  *                                           CONSTANTS

@@ -73,9 +73,10 @@ extern void app_task_main ( uint8_t task_id, uint8_t event_id )
         }
         break;
 
-        case TASK_EVT_APP_MAIN_READ_VR:
+        case TASK_EVT_APP_MAIN_IDLE_PROCESS:
         {
-            app_event_main_read_vr();
+            app_event_main_idle_process();
+            osal_event_set( TASK_ID_APP_MAIN, TASK_EVT_APP_MAIN_IDLE_PROCESS );
         }
         break;
         

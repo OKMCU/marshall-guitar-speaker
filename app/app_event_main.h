@@ -42,7 +42,7 @@ extern "C"
  * FUNCTIONS - API
  **************************************************************************************************/
 extern void app_event_main_por( void );
-extern void app_event_main_read_vr( void );
+extern void app_event_main_idle_process( void );
 
 #ifdef __cplusplus
 }
