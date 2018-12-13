@@ -51,11 +51,11 @@ extern uint16_t hal_vr_read( uint8_t vr_x )
     switch ( vr_x )
     {
         case HAL_VR_0:
-            val = spl_adc_read( SPL_ADC_CH_4 );
+            val = SPL_ADC_VALUE_MAX - spl_adc_read( SPL_ADC_CH_4 );
         break;
         
         case HAL_VR_1:
-            val = spl_adc_read( SPL_ADC_CH_7 );
+            val = SPL_ADC_VALUE_MAX - spl_adc_read( SPL_ADC_CH_7 );
         break;
     }
     
