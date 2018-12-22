@@ -306,7 +306,7 @@
             <InterruptVectorAddress>0</InterruptVectorAddress>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>FSYS_160000</Define>
+              <Define></Define>
               <Undefine></Undefine>
               <IncludePath>..\lib\bufmgr;..\lib\stdlib;..\lib\stringx;..\hal;..\app;..\main;..\osal;..\osal\portable;..\spl;..\spl\fwlib;..\osal\portable\heapmgr</IncludePath>
             </VariousControls>
@@ -370,6 +370,11 @@
               <FileType>1</FileType>
               <FilePath>..\lib\stringx\stringx.c</FilePath>
             </File>
+            <File>
+              <FileName>stdstr.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\lib\stdlib\stdstr.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -404,6 +409,16 @@
               <FileName>spl_i2c.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\spl\spl_i2c.c</FilePath>
+            </File>
+            <File>
+              <FileName>spl_sysclk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\spl\spl_sysclk.c</FilePath>
+            </File>
+            <File>
+              <FileName>spl_timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\spl\spl_timer.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -444,6 +459,11 @@
               <FileName>hal_headphone.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\hal\hal_headphone.c</FilePath>
+            </File>
+            <File>
+              <FileName>hal_key.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\hal\hal_key.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -512,6 +532,26 @@
               <FileName>app_task_main.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\app\app_task_main.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_event_key.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\app\app_event_key.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_task_key.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\app\app_task_key.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_task_cli.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\app\app_task_cli.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_event_cli.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\app\app_event_cli.c</FilePath>
             </File>
           </Files>
         </Group>

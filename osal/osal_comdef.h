@@ -17,12 +17,13 @@
 #ifndef __OSAL_COMDEF_H__
 #define __OSAL_COMDEF_H__
 
-#include <stdint.h>
+#include "stdint.h"
 #include "stdmacro.h"
 #include "osal_config.h"
 #include "osal_port.h"
 
 /**************************** CONSTANTs ***************************/
+#define     OSAL_VERSION                    "V1.0.0"
 #if (OSAL_MSG_EN > 0)
 #define     OSAL_TASK_EVENT_MSG             0
 #endif

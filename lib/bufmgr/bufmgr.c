@@ -14,11 +14,14 @@
  Release Name: 
  Release Date: 2016-06-09 06:57:09
  *****************************************************************************/
-#include <stdio.h>
-#include <string.h>
-#include <stdint.h>
+#include "stdint.h"
 #include "bufmgr.h"
 
+#ifndef FIFO_BUF_API_EN
+#define FIFO_BUF_API_EN 1
+#endif
+
+#if FIFO_BUF_API_EN > 0
 extern void    fifo_buf_flush( FIFO_BUF_t *p_fifo )
 {
 	p_fifo->head = 0;
@@ -63,4 +66,5 @@ extern uint8_t fifo_buf_empty( const FIFO_BUF_t *p_fifo )
 {
 	return ( p_fifo->tail == p_fifo->head );
 }
+#endif
 

@@ -18,9 +18,8 @@
 #ifndef __SPL_CONFIG_H__
 #define __SPL_CONFIG_H__
 
-#include <stdint.h>
+#include "stdint.h"
 
-#define SPL_SYS_CLOCK                       16000000
 #define SPL_MCU_XTAL_EN                     0
 #define SPL_UART_EN                         1
 #define SPL_UART0_EN                        1
@@ -42,21 +41,26 @@
 #define SPL_ADC_CH6_EN                      0
 #define SPL_ADC_CH7_EN                      1
 #define SPL_ADC_BANDGAP_EN                  0
+#define SPL_SYSCLK_EN                       0
+#define SPL_SYSCLK_TRIM_EN                  0
+#define SPL_SYSCLK_CLKO_EN                  0
+#define SPL_TIMER_EN                        0
+#define SPL_TIMER_SYSTICK_EN                0
 
-
-
+#if (SPL_UART_EN > 0)
 #if (SPL_UART0_EN > 0)
 #define SPL_UART0_BAUDRATE                   9600
-#define SPL_UART0_RX_CACHE_SIZE              16
-#define SPL_UART0_TX_CACHE_SIZE              16
+#define SPL_UART0_RX_CACHE_SIZE              8
+#define SPL_UART0_TX_CACHE_SIZE              0
 #define SPL_UART0_CALLBACK                   spl_uart0_callback
 #endif
 
 #if (SPL_UART1_EN > 0)
 #define SPL_UART1_BAUDRATE                   9600
-#define SPL_UART1_RX_CACHE_SIZE              16
-#define SPL_UART1_TX_CACHE_SIZE              16
+#define SPL_UART1_RX_CACHE_SIZE              0
+#define SPL_UART1_TX_CACHE_SIZE              0
 #define SPL_UART1_CALLBACK                   spl_uart1_callback
+#endif
 #endif
 
 #if (SPL_I2C_EN > 0)
@@ -81,6 +85,23 @@
 #define SPL_EXTINT_INT1_CALLBACK            spl_extint_int1_callback
 #endif
 #endif
+
+#if (SPL_SYSCLK_EN > 0)
+#define SPL_SYSCLK_TRIM_BASE                0      //0 == 16.00 MHz, about 40kHz per step
+#define SPL_SYSCLK                          (16000000L+40000L*SPL_SYSCLK_TRIM_BASE)
+#if (SPL_SYSCLK_CLKO_EN > 0)
+#define SPL_SYSCLK_CLKO_DEF_LVL             0       //should be 0 or 1
+#endif //(SPL_SYSCLK_CLKO_EN > 0)
+#else  //(SPL_SYSCLK_EN > 0)
+#define SPL_SYSCLK                          16000000L
+#endif //(SPL_SYSCLK_EN > 0)
+
+#if (SPL_TIMER_EN > 0)
+#if (SPL_TIMER_SYSTICK_EN > 0)
+#define SPL_TIMER_SYSTICK_FREQ              1000
+#define SPL_TIMER_SYSTICK_CALLBACK          osal_timer_systick_inc
+#endif //(SPL_TIMER_SYSTICK_EN > 0)
+#endif //(SPL_TIMER_EN > 0)
 
 /**************************************************************************************************
  *                                        FUNCTIONS - API

@@ -17,7 +17,7 @@
 #ifndef __HAL_DRIVERS_H__
 #define __HAL_DRIVERS_H__
 
-#include <stdint.h>
+#include "stdint.h"
 
 
 /* ------------------------------------------------------------------------------------------------

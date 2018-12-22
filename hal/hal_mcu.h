@@ -17,7 +17,17 @@
 #ifndef __HAL_MCU_H__
 #define __HAL_MCU_H__
 
-#include <stdint.h>
+#include "stdint.h"
+#include "hal_config.h"
+/* ------------------------------------------------------------------------------------------------
+ * CONSTANTS
+ * ------------------------------------------------------------------------------------------------
+ */
+#if HAL_MCU_HSI_TRIM_EN > 0
+#define HAL_MCU_TRIM_MIN       -35
+#define HAL_MCU_TRIM_MAX       35
+#endif //HAL_MCU_TRIM_EN > 0
+
 /* ------------------------------------------------------------------------------------------------
  *                                           Macros
  * ------------------------------------------------------------------------------------------------
@@ -36,8 +46,16 @@
  **************************************************************************************************/
 
 extern void hal_mcu_init( void );
+#if HAL_MCU_RESET_EN > 0
 extern void hal_mcu_reset( void );
+#endif //HAL_MCU_DELAYUS_EN > 0
+#if HAL_MCU_DELAYUS_EN > 0
 extern void hal_mcu_delayus( uint32_t us);
+#endif //HAL_MCU_DELAYUS_EN > 0
+#if HAL_MCU_HSI_TRIM_EN > 0
+extern int8_t hal_mcu_hsi_trim_set( int8_t trim );
+extern int8_t hal_mcu_hsi_trim_get( void );
+#endif //HAL_MCU_TRIM_EN > 0
 
 #endif
 

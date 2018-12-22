@@ -36,7 +36,7 @@ extern void     spl_i2c_init( void )
 extern void     spl_i2c_open( void )
 {
     /* Set I2C clock rate */
-    I2CLK = SPL_SYS_CLOCK/SPL_I2C_CLOCK/4 - 1;
+    I2CLK = SPL_SYSCLK/SPL_I2C_CLOCK/4 - 1;
     /* Enable I2C */
     set_I2CEN;
 }

@@ -29,10 +29,11 @@
 
 #include "main.h"
 
-#include <string.h>
+#include "stdstr.h"
 #include "stringx.h"
 #include "bufmgr.h"
 
+#if HAL_HEADPHONE_EN > 0
 /* ------------------------------------------------------------------------------------------------
  *                                       Local Prototypes
  * ------------------------------------------------------------------------------------------------
@@ -61,6 +62,6 @@ extern void hal_headphone_disable_power_amp( void )
 {
     spl_gpio_write_pin( SPL_GPIO_PIN_P03, 0 );
 }
-
+#endif
 /**************************************************************************************************
 */

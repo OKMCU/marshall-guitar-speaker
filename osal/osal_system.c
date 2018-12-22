@@ -15,20 +15,20 @@
  Release Date: 2016-06-09 06:57:09
  *****************************************************************************/
 #include "osal.h"
-#include <stdint.h>
+#include "stdint.h"
 
 #if (OSAL_TIMER_EN > 0)
 extern void osal_timer_update( void );
 #endif /* (OSAL_TIMER_EN > 0) */
 
-extern OSAL_TASK_t osal_task_list[ OSAL_TASK_MAX ];
+extern FLASH OSAL_TASK_t osal_task_list[];
 
 #if ( OSAL_EVENT_MAX == 32 )
-extern uint32_t osal_event_list[ OSAL_TASK_MAX ];
+extern uint32_t osal_event_list[];
 #elif ( OSAL_EVENT_MAX == 16 )
-extern uint16_t osal_event_list[ OSAL_TASK_MAX ];
+extern uint16_t osal_event_list[];
 #elif ( OSAL_EVENT_MAX == 8 )
-extern uint8_t  osal_event_list[ OSAL_TASK_MAX ];
+extern uint8_t  osal_event_list[];
 #else
 #error "OSAL_EVENT_MAX must be 8, 16 or 32"
 #endif

@@ -43,9 +43,9 @@ extern "C"
 /*
  * Process Serial Buffer
  */
+
 extern void app_task_cli_init ( void );
 extern void app_task_cli ( uint8_t task_id, uint8_t event_id );
-
 
 
 #ifdef __cplusplus

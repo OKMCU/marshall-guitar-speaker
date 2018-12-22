@@ -18,26 +18,40 @@
 #include "osal_config.h"
 #include "osal_port.h"
 #include "osal_task.h"
-#include <stdint.h>
-#include <string.h>
+#include "stdint.h"
+#include "stdstr.h"
 
 #if (OSAL_TIMER_EN > 0)
 
+#if (OSAL_TIMER_STATIC_EN == 0)
 typedef struct osal_timer_t {
     struct osal_timer_t *p_timer_prev;
     struct osal_timer_t *p_timer_next;
     void ( *p_fxn )( void * );
     void *p_arg;
-    uint32_t timeout;
+    osal_timer_timeout_t timeout;
 } OSAL_TIMER_t;
+#else
+typedef struct osal_timer_t {
+    osal_timer_timeout_t timeout;
+    uint8_t task_id;
+    uint8_t event_id;
+} OSAL_TIMER_t;
+#endif //(OSAL_TIMER_STATIC_EN == 0)
 
+#if (OSAL_TIMER_STATIC_EN == 0)
 static OSAL_TIMER_t *p_timers_head;
 static OSAL_TIMER_t *p_timers_tail;
+#else
+static OSAL_TIMER_t osal_timer_list[OSAL_TIMER_MAX];
+#endif //(OSAL_TIMER_STATIC_EN == 0)
+
 static uint32_t time_sec;
 static uint16_t time_ms;
 static uint8_t prev_systick;
-uint8_t osal_systick;
+static uint8_t osal_systick;
 
+#if (OSAL_TIMER_STATIC_EN == 0)
 #if (OSAL_ASSERT_EN > 0)
 static OSAL_TIMER_t *osal_timer_list_find( OSAL_TIMER_t *p_timer )
 {
@@ -145,10 +159,88 @@ static OSAL_TIMER_t *osal_timer_event_find( uint8_t task_id, uint8_t event_id )
     return p_timer_match;
 }
 
+static void    *osal_timer_cback_create ( void ( *p_fxn )( void * ), void *p_arg, osal_timer_timeout_t timeout_ms )
+{
+    OSAL_TIMER_t *p_timer_new;
+
+    OSAL_ASSERT( p_fxn != NULL );
+    OSAL_ASSERT( timeout_ms != 0 );
+
+    p_timer_new = osal_mem_alloc( sizeof(OSAL_TIMER_t) );
+    if( p_timer_new != NULL )
+    {
+        p_timer_new->p_fxn = p_fxn;
+        p_timer_new->p_arg = p_arg;
+        p_timer_new->timeout = timeout_ms;
+        osal_timer_list_add( p_timer_new );
+    }
+    
+    return p_timer_new;
+}
+
+//static void osal_timer_cback_update ( void *timer_id, osal_timer_timeout_t timeout_ms )
+//{
+//    OSAL_ASSERT( timer_id != NULL );
+//    OSAL_ASSERT( timeout_ms != 0 );
+//    OSAL_ASSERT( osal_timer_list_find( (OSAL_TIMER_t *)timer_id ) != NULL );
+//    
+//    ((OSAL_TIMER_t *)timer_id)->timeout = timeout_ms;
+//}
+
+static void osal_timer_cback_delete ( void *timer_id )
+{
+    OSAL_ASSERT( timer_id != NULL );
+    OSAL_ASSERT( osal_timer_list_find( (OSAL_TIMER_t *)timer_id ) != NULL );
+    
+    osal_timer_list_del( (OSAL_TIMER_t *)timer_id );
+    osal_mem_free( timer_id );
+}
+
+//static uint32_t osal_timer_cback_query  ( void *timer_id )
+//{
+//    OSAL_ASSERT( timer_id != NULL );
+//    OSAL_ASSERT( osal_timer_list_find( (OSAL_TIMER_t *)timer_id ) != NULL );
+//    
+//    return ( (OSAL_TIMER_t *)timer_id )->timeout;
+//}
+#else
+
+#if (OSAL_TIMER_MAX >= UINT8_MAX)
+static uint16_t
+#else
+static uint8_t  
+#endif //(OSAL_TIMER_MAX >= UINT8_MAX)
+osal_timer_event_find( uint8_t task_id, uint8_t event_id )
+{
+#if (OSAL_TIMER_MAX >= UINT8_MAX)
+    uint16_t timer_id;
+#else
+    uint8_t  timer_id;
+#endif //(OSAL_TIMER_MAX >= UINT8_MAX)
+    for( timer_id = 0; timer_id < OSAL_TIMER_MAX; timer_id++ )
+    {
+        if( osal_timer_list[timer_id].timeout > 0 )
+        {
+            if( osal_timer_list[timer_id].task_id  == task_id &&
+                osal_timer_list[timer_id].event_id == event_id )
+            {
+                break;
+            }
+        }
+    }
+    
+    return timer_id;
+}
+#endif //(OSAL_TIMER_STATIC_EN == 0)
+
 extern void     osal_timer_init         ( void )
 {
+#if (OSAL_TIMER_STATIC_EN == 0)
     p_timers_head = NULL;
     p_timers_tail = NULL;
+#else
+    mem_set( osal_timer_list, 0, sizeof(osal_timer_list) );
+#endif
     time_sec = 0;
     time_ms = 0;
     prev_systick = 0;
@@ -157,12 +249,21 @@ extern void     osal_timer_init         ( void )
 
 extern void     osal_timer_update       ( void )
 {
+#if (OSAL_TIMER_STATIC_EN == 0)
     OSAL_TIMER_t *p_timer_curr;
     OSAL_TIMER_t *p_timer_next;
     OSAL_TIMER_t *p_timer_head;
     OSAL_TIMER_t *p_timer_tail;
     void (*p_fxn)( void * );
     void *p_arg;
+#else
+#if (OSAL_TIMER_MAX >= UINT8_MAX)
+    uint16_t timer_id;
+#else
+    uint8_t  timer_id;
+#endif//(OSAL_TIMER_MAX >= UINT8_MAX)
+#endif//(OSAL_TIMER_STATIC_EN == 0)
+
     uint8_t curr_systick;
     uint8_t delta_systick;
     
@@ -182,7 +283,7 @@ extern void     osal_timer_update       ( void )
             time_sec++;
         }
 
-
+#if (OSAL_TIMER_STATIC_EN == 0)
         if( p_timers_head )
         {
             OSAL_ASSERT( p_timers_tail != NULL );
@@ -206,8 +307,20 @@ extern void     osal_timer_update       ( void )
                     p_fxn( p_arg );
                 }
             }
-            
         }
+#else
+        for( timer_id = 0; timer_id < OSAL_TIMER_MAX; timer_id++ )
+        {
+            if( osal_timer_list[timer_id].timeout )
+            {
+                osal_timer_list[timer_id].timeout = ( osal_timer_list[timer_id].timeout >= delta_systick ) ? (osal_timer_list[timer_id].timeout - delta_systick) : 0;
+                if( osal_timer_list[timer_id].timeout == 0 )
+                {
+                    osal_event_set( osal_timer_list[timer_id].task_id, osal_timer_list[timer_id].event_id );
+                }
+            }
+        }
+#endif
     }
 }
 
@@ -225,61 +338,24 @@ extern void     osal_timer_set_time     ( uint32_t sec, uint16_t ms )
     time_ms = ms;
 }
 
-extern void    *osal_timer_cback_create ( void ( *p_fxn )( void * ), void *p_arg, uint32_t timeout_ms )
+extern void osal_timer_event_create ( uint8_t task_id, uint8_t event_id, osal_timer_timeout_t timeout_ms )
 {
-    OSAL_TIMER_t *p_timer_new;
-
-    OSAL_ASSERT( p_fxn != NULL );
-    OSAL_ASSERT( timeout_ms != 0 );
-
-    p_timer_new = osal_mem_alloc( sizeof(OSAL_TIMER_t) );
-    if( p_timer_new != NULL )
-    {
-        p_timer_new->p_fxn = p_fxn;
-        p_timer_new->p_arg = p_arg;
-        p_timer_new->timeout = timeout_ms;
-        osal_timer_list_add( p_timer_new );
-    }
-    
-    return p_timer_new;
-}
-
-extern void osal_timer_cback_update ( void *timer_id, uint32_t timeout_ms )
-{
-    OSAL_ASSERT( timer_id != NULL );
-    OSAL_ASSERT( timeout_ms != 0 );
-    OSAL_ASSERT( osal_timer_list_find( (OSAL_TIMER_t *)timer_id ) != NULL );
-    
-    ((OSAL_TIMER_t *)timer_id)->timeout = timeout_ms;
-}
-
-extern void osal_timer_cback_delete ( void *timer_id )
-{
-    OSAL_ASSERT( timer_id != NULL );
-    OSAL_ASSERT( osal_timer_list_find( (OSAL_TIMER_t *)timer_id ) != NULL );
-    
-    osal_timer_list_del( (OSAL_TIMER_t *)timer_id );
-    osal_mem_free( timer_id );
-}
-
-extern uint32_t osal_timer_cback_query  ( void *timer_id )
-{
-    OSAL_ASSERT( timer_id != NULL );
-    OSAL_ASSERT( osal_timer_list_find( (OSAL_TIMER_t *)timer_id ) != NULL );
-    
-    return ( (OSAL_TIMER_t *)timer_id )->timeout;
-}
-
-extern void *osal_timer_event_create ( uint8_t task_id, uint8_t event_id, uint32_t timeout_ms )
-{
+#if (OSAL_TIMER_STATIC_EN == 0)
     OSAL_TIMER_t *p_timer_match;
+#else
+#if (OSAL_TIMER_MAX >= UINT8_MAX)
+    uint16_t timer_id;
+#else
+    uint8_t  timer_id;
+#endif//(OSAL_TIMER_MAX >= UINT8_MAX)
+#endif
 
     OSAL_ASSERT( task_id < OSAL_TASK_MAX );
     OSAL_ASSERT( event_id < OSAL_EVENT_MAX );
     OSAL_ASSERT( timeout_ms != 0 );
     
+#if (OSAL_TIMER_STATIC_EN == 0)
     p_timer_match = osal_timer_event_find( task_id, event_id );
-    
     if( p_timer_match )
     {
         //if found, update it
@@ -290,31 +366,82 @@ extern void *osal_timer_event_create ( uint8_t task_id, uint8_t event_id, uint32
         //if not found, create it
         p_timer_match = (void *)osal_timer_cback_create( osal_timer_event_kernel, (void *)BUILD_UINT16( event_id, task_id ), timeout_ms);
     }
-    return p_timer_match;
+    OSAL_ASSERT( p_timer_match != NULL );
+#else
+    timer_id = osal_timer_event_find( task_id, event_id );
+    if( timer_id != OSAL_TIMER_MAX )
+    {
+        //if found, update it
+        osal_timer_list[timer_id].timeout = timeout_ms;
+    }
+    else
+    {
+        //find a free timer_id
+        for( timer_id = 0; timer_id < OSAL_TIMER_MAX; timer_id++ )
+        {
+            if( osal_timer_list[timer_id].timeout == 0 )
+            {
+                osal_timer_list[timer_id].timeout = timeout_ms;
+                osal_timer_list[timer_id].task_id = task_id;
+                osal_timer_list[timer_id].event_id = event_id;
+                break;
+            }
+        }
+
+        OSAL_ASSERT( timer_id != OSAL_TIMER_MAX );
+    }
+#endif
+
 }
 
-extern void *osal_timer_event_update ( uint8_t task_id, uint8_t event_id, uint32_t timeout_ms )
+extern void osal_timer_event_update ( uint8_t task_id, uint8_t event_id, osal_timer_timeout_t timeout_ms )
 {
+#if (OSAL_TIMER_STATIC_EN == 0)
     OSAL_TIMER_t *p_timer_match;
+#else
+#if (OSAL_TIMER_MAX >= UINT8_MAX)
+    uint16_t timer_id;
+#else
+    uint8_t  timer_id;
+#endif//(OSAL_TIMER_MAX >= UINT8_MAX)
+#endif
 
     OSAL_ASSERT( task_id < OSAL_TASK_MAX);
     OSAL_ASSERT( event_id < OSAL_EVENT_MAX );
     OSAL_ASSERT( timeout_ms != 0 );
-    
+
+#if (OSAL_TIMER_STATIC_EN == 0)
     p_timer_match = osal_timer_event_find( task_id, event_id );
     if( p_timer_match )
     {
         p_timer_match->timeout = timeout_ms;
     }
-    return (void *)p_timer_match;
+#else
+    timer_id = osal_timer_event_find( task_id, event_id );
+    if( timer_id != OSAL_TIMER_MAX )
+    {
+        osal_timer_list[timer_id].timeout = timeout_ms;
+    }
+#endif
+
 }
 
-extern void  *osal_timer_event_delete ( uint8_t task_id, uint8_t event_id )
+extern void osal_timer_event_delete ( uint8_t task_id, uint8_t event_id )
 {
+#if (OSAL_TIMER_STATIC_EN == 0)
     OSAL_TIMER_t *p_timer_match;
+#else
+#if (OSAL_TIMER_MAX >= UINT8_MAX)
+    uint16_t timer_id;
+#else
+    uint8_t  timer_id;
+#endif//(OSAL_TIMER_MAX >= UINT8_MAX)
+#endif
 
     OSAL_ASSERT( task_id < OSAL_TASK_MAX);
     OSAL_ASSERT( event_id < OSAL_EVENT_MAX );
+    
+#if (OSAL_TIMER_STATIC_EN == 0)
     p_timer_match = osal_timer_event_find( task_id, event_id );
 
     if( p_timer_match )
@@ -325,26 +452,55 @@ extern void  *osal_timer_event_delete ( uint8_t task_id, uint8_t event_id )
     {
         osal_event_clr( task_id, event_id );
     }
-
-    return (void *)p_timer_match;
+#else
+    timer_id = osal_timer_event_find( task_id, event_id );
+    if( timer_id != OSAL_TIMER_MAX )
+    {
+        osal_timer_list[timer_id].timeout = 0;
+    }
+    else
+    {
+        osal_event_clr( task_id, event_id );
+    }
+#endif
 }
 
 extern uint32_t osal_timer_event_query  ( uint8_t task_id, uint8_t event_id )
 {
+#if (OSAL_TIMER_STATIC_EN == 0)
     OSAL_TIMER_t *p_timer_match;
-    
+#else
+#if (OSAL_TIMER_MAX >= UINT8_MAX)
+    uint16_t timer_id;
+#else
+    uint8_t  timer_id;
+#endif//(OSAL_TIMER_MAX >= UINT8_MAX)
+#endif
+
     OSAL_ASSERT( task_id < OSAL_TASK_MAX);
     OSAL_ASSERT( event_id < OSAL_EVENT_MAX );
 
+#if (OSAL_TIMER_STATIC_EN == 0)
     p_timer_match = osal_timer_event_find( task_id, event_id );
     if( p_timer_match )
     {
         return p_timer_match->timeout;
     }
+#else
+    timer_id = osal_timer_event_find( task_id, event_id );
+    if( timer_id != OSAL_TIMER_MAX )
+    {
+        return osal_timer_list[timer_id].timeout;
+    }
+#endif
     
     return 0;
 }
 
+extern void osal_timer_systick_inc( void )
+{
+    osal_systick++;
+}
 
 #endif /* (OSAL_TIMER_EN > 0) */
 

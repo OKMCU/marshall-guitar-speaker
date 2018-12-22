@@ -18,13 +18,35 @@
 #define __HAL_H__
 
 #include "hal_config.h"
+
+#if HAL_ASSERT_EN > 0
 #include "hal_assert.h"
+#endif
+
 #include "hal_drivers.h"
 #include "hal_mcu.h"
+
+#if HAL_CLI_EN > 0
 #include "hal_cli.h"
+#endif
+
+
+#if HAL_KEY_EN > 0
+#include "hal_key.h"
+#endif
+
+#if HAL_VR_EN > 0
 #include "hal_vr.h"
+#endif
+
+#if HAL_MS6715_EN > 0
 #include "hal_ms6715.h"
+#endif
+
+#if HAL_HEADPHONE_EN > 0
 #include "hal_headphone.h"
+#endif
+
 /* ------------------------------------------------------------------------------------------------
  *                                           Macros
  * ------------------------------------------------------------------------------------------------

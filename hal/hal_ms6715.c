@@ -24,7 +24,7 @@
 
 #include "main.h"
 
-#include <string.h>
+#include "stdstr.h"
 #include "stringx.h"
 #include "bufmgr.h"
 

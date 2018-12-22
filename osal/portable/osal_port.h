@@ -17,7 +17,7 @@
 #ifndef __OSAL_PORT_H__
 #define __OSAL_PORT_H__
 
-#include <stdint.h>
+#include "stdint.h"
 #include "osal_comdef.h"
 #include "osal_config.h"
 #include "stdmacro.h"
@@ -55,6 +55,11 @@
 
 #define     OSAL_ENTER_CRITICAL()           EA = 0
 #define     OSAL_EXIT_CRITICAL()            EA = 1
+
+#define     REG                             data
+#define     IRAM                            idata
+#define     XRAM                            xdata
+#define     FLASH                           code
 
 #if (OSAL_MEM_EN > 0)
 #define     osal_mem_init()                 umm_init()

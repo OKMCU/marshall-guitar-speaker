@@ -17,7 +17,16 @@
 #ifndef __BUFMGR_H__
 #define __BUFMGR_H__
 
-#include <stdint.h>
+#include "stdint.h"
+#include "stdmacro.h"
+
+
+#define FIFO_BUF_FLUSH( head, tail )                st( head = 0; tail = 0; )
+#define FIFO_BUF_INC_INDEX( index, size )           index = (index+1)>=size ? 0:(index+1)
+#define FIFO_BUF_PUT( byte, head, p_buf, size )     st( p_buf[head] = byte; FIFO_BUF_INC_INDEX(head, size); )
+#define FIFO_BUF_GET( p_byte, tail, p_buf, size )   st( *(p_byte) = p_buf[tail]; FIFO_BUF_INC_INDEX(tail, size); )
+#define FIFO_BUF_EMPTY( head, tail )                (head==tail)
+#define FIFO_BUF_FULL( head, tail, size )           (((head+1)>=size?0:(head+1))==tail)
 
 typedef struct fifo_buf_t {
     uint8_t *buf;

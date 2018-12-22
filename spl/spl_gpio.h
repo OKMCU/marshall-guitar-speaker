@@ -16,7 +16,7 @@
  *****************************************************************************/
 #ifndef __SPL_GPIO_H__
 #define __SPL_GPIO_H__
-#include <stdint.h>
+#include "stdint.h"
 #include "Common.h"
 #include "Function_Define.h"
 #include "N76E003.h"

@@ -16,9 +16,6 @@
  *****************************************************************************/
 #include "osal_config.h"
 #include "osal_port.h"
-#include "osal_task.h"
-
-#include "main.h"
 
 #if (OSAL_ASSERT_EN > 0)
 extern void    osal_assert_handler( void )

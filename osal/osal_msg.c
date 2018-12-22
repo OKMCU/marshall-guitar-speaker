@@ -18,8 +18,7 @@
 #include "osal_config.h"
 #include "osal_port.h"
 #include "osal_task.h"
-#include <stdint.h>
-#include <string.h>
+#include "stdint.h"
 
 #if (OSAL_MSG_EN > 0)
 

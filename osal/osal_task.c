@@ -17,11 +17,10 @@
 #include "osal_task.h"
 #include "osal_config.h"
 #include "osal_port.h"
-#include "osal_msg.h"
-#include <string.h>
 
+#include "stdstr.h"
 
-OSAL_TASK_t osal_task_list[ OSAL_TASK_MAX ];
+extern FLASH OSAL_TASK_t osal_task_list[];
 
 #if ( OSAL_EVENT_MAX == 32 )
 uint32_t osal_event_list[ OSAL_TASK_MAX ];
@@ -36,38 +35,7 @@ uint8_t  osal_event_list[ OSAL_TASK_MAX ];
 
 extern void    osal_task_init   ( void )
 {
-    memset( osal_task_list, 0, sizeof(osal_task_list) );
-    memset( osal_event_list, 0, sizeof(osal_event_list) );
-}
-
-
-extern void osal_task_create ( OSAL_TASK_t pfn_task, uint8_t task_id )
-{
-    OSAL_ASSERT( task_id < OSAL_TASK_MAX );
-    OSAL_ASSERT( pfn_task != NULL );
-    OSAL_ASSERT( osal_task_list[task_id] == NULL );
-    osal_task_list[task_id] = pfn_task;
-}
-
-extern void osal_task_delete ( uint8_t task_id )
-{
-#if (OSAL_MSG_EN > 0)
-    void *p_msg;
-#endif
-
-    OSAL_ASSERT( task_id < OSAL_TASK_MAX );
-
-#if (OSAL_MSG_EN > 0)
-    p_msg = osal_msg_recv( task_id );
-    while( p_msg != NULL )
-    {
-        osal_msg_delete( p_msg );
-        p_msg = osal_msg_recv( task_id );
-    }
-#endif
-    
-    osal_task_list[task_id] = NULL;
-    osal_event_list[task_id] = 0;
+    mem_set( osal_event_list, 0, sizeof(osal_event_list) );
 }
 
 extern void osal_event_set   ( uint8_t task_id, uint8_t event_id )

@@ -19,19 +19,21 @@
 #define __HAL_CLI_H__
 
 
-#include <stdint.h>
+#include "stdint.h"
 #include "hal_config.h"
 
-#if (HAL_CLI_EN > 0)
 extern void hal_cli_init         ( void );
-extern void hal_cli_print_char   ( char c );
+extern uint8_t hal_cli_rx_len    ( void );
+extern void hal_cli_putchar( char c );
+extern char hal_cli_getchar( void );
+#if (HAL_CLI_PRINT_EN > 0)
 extern void hal_cli_print_str    ( const char *s );
 extern void hal_cli_print_sint   ( int32_t num );
 extern void hal_cli_print_uint   ( uint32_t num );
 extern void hal_cli_print_hex8   ( uint8_t num );
 extern void hal_cli_print_hex16  ( uint16_t num );
 extern void hal_cli_print_hex32  ( uint32_t num );
-#endif /* (HAL_CLI_EN > 0) */
+#endif
 
 #endif /* __HAL_CLI_H__ */
 

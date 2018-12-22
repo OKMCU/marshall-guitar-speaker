@@ -19,7 +19,7 @@
 #define __HAL_MS6715_H__
 
 
-#include <stdint.h>
+#include "stdint.h"
 #include "hal_config.h"
 
 #if (HAL_MS6715_EN > 0)

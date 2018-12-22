@@ -24,9 +24,9 @@
 
 #include "main.h"
 
-#include <string.h>
-#include "stringx.h"
+#include "stdstr.h"
 #include "stdconst.h"
+#include "stringx.h"
 /**************************************************************************************************
  * TYPE DEFINES
  **************************************************************************************************/
@@ -73,9 +73,14 @@ static code uint16_t tb_level_lut[16] = {
 
 extern void app_event_main_por( void )
 {
+#if APP_CLI_EN > 0
     hal_cli_print_str( "\r\nThis is Marshall Guitar Speaker project.\r\n" );
     hal_cli_print_str( "Power on reset.\r\n" );
 
+    hal_cli_print_str( "Free-OSAL Version " );
+    hal_cli_print_str( OSAL_VERSION );
+    hal_cli_print_str( "\r\n" );
+    
     hal_cli_print_str( "Firmware Version " );
     hal_cli_print_str( FIRMWARE_VER );
     hal_cli_print_str( "\r\n" );
@@ -83,7 +88,7 @@ extern void app_event_main_por( void )
     hal_cli_print_str( "Hardware Version " );
     hal_cli_print_str( HARDWARE_VER );
     hal_cli_print_str( "\r\n" );
-
+#endif
     hal_headphone_init();
     
     hal_vr_init();
@@ -95,16 +100,43 @@ extern void app_event_main_por( void )
     hal_ms6715_set_bass( 0 );
     hal_ms6715_set_treble( 0 );
 
+#if APP_KEY_EN > 0
+    app_info.key_state = 0x00;
+#endif
     app_info.bass_level = 0;
     app_info.treble_level = 0;
     app_info.bass_vr_pos = 0;
     app_info.treble_vr_pos = 0;
     app_info.headphone_enable = FALSE;
 
-    osal_event_set( TASK_ID_APP_MAIN, TASK_EVT_APP_MAIN_IDLE_PROCESS );
+    osal_event_set( TASK_ID_APP_MAIN, TASK_EVT_APP_MAIN_IDLE );
 }
 
-extern void app_event_main_idle_process( void )
+extern void app_event_main_app_exception( void )
+{
+#if (APP_CLI_EN > 0)
+    hal_cli_print_str( "ERROR! " );
+    hal_cli_print_str( "APP EXCEPTION!\r\n" );
+#endif
+}
+
+extern void app_event_main_hal_exception( void )
+{
+#if (APP_CLI_EN > 0)
+    hal_cli_print_str( "ERROR! " );
+    hal_cli_print_str( "HAL EXCEPTION!\r\n" );
+#endif
+}
+
+extern void app_event_main_osal_exception( void )
+{
+#if (APP_CLI_EN > 0)
+    hal_cli_print_str( "ERROR! " );
+    hal_cli_print_str( "OSAL_EXCEPTION!\r\n" );
+#endif
+}
+
+extern void app_event_main_idle( void )
 {
     uint16_t vr_pos;
     int8_t tb_level;

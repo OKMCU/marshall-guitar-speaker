@@ -27,10 +27,9 @@
 #ifndef FUNCTION_DEFINE_H__
 #define FUNCTION_DEFINE_H__
 
+#include "spl_config.h"
 #include <intrins.h>
-#include <stdio.h>
-
-#define nop _nop_();
+#define nop() _nop_()
 
 
 //16 --> 8 x 2
@@ -225,26 +224,7 @@
 /*****************************************************************************************
 * For TIMER VALUE setting is base on " option -> C51 -> Preprocesser Symbols -> Define "
 *****************************************************************************************/
-#ifdef FSYS_1700kHz
-//  #define TIMER_DIV12_VALUE_10us          65536-14            //14*12/1700000 = 10 uS,                // Timer divider = 12 for TM0/TM1
-//  #define TIMER_DIV12_VALUE_100us         65536-138           //138*12/1700000 = 100 uS,              // Timer divider = 12 
-//  #define TIMER_DIV12_VALUE_1ms           65536-1383          //1383*12/1700000 = 1 mS,               // Timer divider = 12 
-//  #define TIMER_DIV12_VALUE_10ms          65536-13833         //13833*12/1700000 = 10 mS              // Timer divider = 12 
-//  #define TIMER_DIV12_VALUE_40ms          65536-55333         //55333*12/1700000 = 40 ms              // Timer divider = 12 
-    #define TIMER_DIV4_VALUE_10us           65536-4             //4*4/1700000 = 10 uS,                  // Timer divider = 4 for TM2/TM3
-    #define TIMER_DIV4_VALUE_100us          65536-42            //42*4/1700000 = 100 us                 // Timer divider = 4
-    #define TIMER_DIV4_VALUE_200us          65536-85            //85*4/1700000 = 200 us                 // Timer divider = 4
-    #define TIMER_DIV4_VALUE_500us          65536-212           //212*4/1700000 = 500 us                // Timer divider = 4
-    #define TIMER_DIV4_VALUE_1ms            65536-425           //425*4/1700000 = 1 mS,                 // Timer divider = 4
-    #define TIMER_DIV4_VALUE_10ms           65536-4250          //4250*4/1700000 = 10 mS,               // Timer divider = 4
-//  #define TIMER_DIV16_VALUE_10ms          65536-10375         //10375*16/1700000 = 10 ms              // Timer divider = 16
-//  #define TIMER_DIV64_VALUE_30ms          65536-7781          //7781*64/1700000 = 30 ms               // Timer divider = 64
-//  #define TIMER_DIV128_VALUE_100ms        65536-12969         //12969*128/1700000 = 100 ms            // Timer divider = 128
-//  #define TIMER_DIV128_VALUE_200ms        65536-25937         //25937*128/1700000 = 200 ms            // Timer divider = 128
-//  #define TIMER_DIV256_VALUE_500ms        65536-32422         //32422*256/1700000 = 500 ms            // Timer divider = 256
-//  #define TIMER_DIV512_VALUE_1s           65536-32422         //31250*512/1700000 = 1 s.              // Timer Divider = 512
-#endif
-#ifdef FSYS_110592                                              // if Fsys = 11.0592MHz 
+#if (SPL_SYSCLK == 11059200)                                 // if Fsys = 11.0592MHz 
     #define TIMER_DIV12_VALUE_10us          65536-9             //9*12/11.0592 = 10 uS,                 // Timer divider = 12 for TM0/TM1
     #define TIMER_DIV12_VALUE_1ms           65536-923           //923*12/11.0592 = 1 mS                 // Timer divider = 12
     #define TIMER_DIV12_VALUE_10ms          65536-9216          //18432*12/22118400 = 10 ms             // Timer divider = 12
@@ -260,7 +240,7 @@
     #define TIMER_DIV256_VALUE_500ms        65536-21600         //43200*256/22118400 = 500 ms           // Timer divider = 256
     #define TIMER_DIV512_VALUE_1s           65536-21600         //43200*512/22118400 = 1 s              // Timer divider = 512
 #endif
-#ifdef FSYS_160000                                              // if Fsys = 16MHz 
+#if (SPL_SYSCLK == 16000000)                                 // if Fsys = 16MHz 
     #define TIMER_DIV12_VALUE_10us          65536-13            //13*12/16000000 = 10 uS,               // Timer divider = 12 for TM0/TM1
     #define TIMER_DIV12_VALUE_100us         65536-130           //130*12/16000000 = 100uS,              // Timer divider = 12 
     #define TIMER_DIV12_VALUE_1ms           65536-1334          //1334*12/16000000 = 1 mS,              // Timer divider = 12 
@@ -278,7 +258,7 @@
     #define TIMER_DIV256_VALUE_500ms        65536-31250         //31250*256/16000000 = 500 ms           // Timer divider = 256
     #define TIMER_DIV512_VALUE_1s           65536-31250         //31250*512/16000000 = 1 s.             // Timer Divider = 512
 #endif
-#ifdef FSYS_166000                                              // if Fsys = 16.6MHz 
+#if (SPL_SYSCLK == 16600000)                                 // if Fsys = 16.6MHz 
     #define TIMER_DIV12_VALUE_10us          65536-14            //14*12/16600000 = 10 uS,               // Timer divider = 12 for TM0/TM1
     #define TIMER_DIV12_VALUE_100us         65536-138           //138*12/16600000 = 100 uS,             // Timer divider = 12 
     #define TIMER_DIV12_VALUE_1ms           65536-1383          //1383*12/16600000 = 1 mS,              // Timer divider = 12 
@@ -296,26 +276,26 @@
     #define TIMER_DIV256_VALUE_500ms        65536-32422         //32422*256/16600000 = 500 ms           // Timer divider = 256
     #define TIMER_DIV512_VALUE_1s           65536-32422         //31250*512/16600000 = 1 s.             // Timer Divider = 512
 #endif
-#ifdef FSYS_170000                                              // if Fsys = 17MHz 
+#if (SPL_SYSCLK == 17000000)                                 // if Fsys = 17MHz 
     #define TIMER_DIV1_VALUE_10us           65536-170           //170*1/17000000 = 10 uS,               // Timer divider = 1 for TM2/TM3
     #define TIMER_DIV1_VALUE_100us          65536-1700          //1700*1/17000000 = 100 us              // Timer divider = 1
     #define TIMER_DIV1_VALUE_200us          65536-3400          //3400*1/17000000 = 200 us              // Timer divider = 1
     #define TIMER_DIV1_VALUE_500us          65536-8500          //8500*1/17000000 = 500 us              // Timer divider = 1
     #define TIMER_DIV1_VALUE_1ms            65536-17000         //17000*1/17000000 = 1 mS,              // Timer divider = 1
 #endif
-#ifdef FSYS_184320                                              // if Fsys = 18.432MHz 
+#if (SPL_SYSCLK == 18432000)                                 // if Fsys = 18.432MHz 
     #define TIMER_DIV12_VALUE_10us          65536-15            //15*12/18.432 = 10 uS,  Timer Clock = Fsys/12
     #define TIMER_DIV12_VALUE_1ms           65536-1536          //1536*12/18.432 = 1 mS, Timer Clock = Fsys/12
     #define TIMER_DIV4_VALUE_10us           65536-46            //46*4/18.432 = 10 uS,   Timer Clock = Fsys/4
     #define TIMER_DIV4_VALUE_1ms            65536-4608          //4608*4/18.432 = 1 mS,  Timer Clock = Fsys/4
 #endif
-#ifdef FSYS_200000                                              // if Fsys = 20 MHz
+#if (SPL_SYSCLK == 20000000)                                 // if Fsys = 20 MHz
     #define TIMER_DIV12_VALUE_10us          65536-17            //17*12/20000000 = 10 uS,  Timer Clock = Fsys/12
     #define TIMER_DIV12_VALUE_1ms           65536-1667          //1667*12/20000000 = 1 mS, Timer Clock = Fsys/12
     #define TIMER_DIV4_VALUE_10us           65536-50            //50*4/20000000 = 10 uS,    Timer Clock = Fsys/4
     #define TIMER_DIV4_VALUE_1ms            65536-5000          //5000*4/20000000 = 1 mS,   Timer Clock = Fsys/4
 #endif
-#ifdef FSYS_221184                                              // if Fsys = 22.1184 MHz 
+#if (SPL_SYSCLK == 22118400)                                 // if Fsys = 22.1184 MHz 
     #define TIMER_DIV12_VALUE_10us          65536-18            //18*12/22118400 = 10 uS,               // Timer divider = 12
     #define TIMER_DIV12_VALUE_1ms           65536-1843          //1843*12/22118400 = 1 mS,              // Timer divider = 12
     #define TIMER_DIV12_VALUE_10ms          65536-18432         //18432*12/22118400 = 10 ms             // Timer divider = 12
@@ -331,7 +311,7 @@
     #define TIMER_DIV256_VALUE_500ms        65536-43200         //43200*256/22118400 = 500 ms           // Timer divider = 256
     #define TIMER_DIV512_VALUE_1s           65536-43200         //43200*512/22118400 = 1 s              // Timer divider = 512
 #endif
-#ifdef FSYS_240000                                              // if Fsys = 20 MHz
+#if (SPL_SYSCLK == 24000000)                                 // if Fsys = 24 MHz
     #define TIMER_DIV12_VALUE_10us          65536-20            //20*12/24000000 = 10 uS,               // Timer divider = 12
     #define TIMER_DIV12_VALUE_1ms           65536-2000          //2000*12/24000000 = 1 mS,              // Timer divider = 12
     #define TIMER_DIV12_VALUE_10ms          65536-20000         //2000*12/24000000 = 10 mS              // Timer divider = 12

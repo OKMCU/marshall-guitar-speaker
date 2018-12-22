@@ -18,7 +18,7 @@
 #define __SPL_UART_H__
 
 
-#include <stdint.h>
+#include "stdint.h"
 
 #define     SPL_UART_PORT_0                 0
 #define     SPL_UART_PORT_1                 1

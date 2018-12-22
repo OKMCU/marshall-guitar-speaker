@@ -24,7 +24,7 @@ extern "C"
 /**************************************************************************************************
  * INCLUDES
  **************************************************************************************************/
-#include <stdint.h>
+#include "stdint.h"
 
 /**************************************************************************************************
  * TYPES
@@ -42,7 +42,11 @@ extern "C"
  * FUNCTIONS - API
  **************************************************************************************************/
 extern void app_event_main_por( void );
-extern void app_event_main_idle_process( void );
+extern void app_event_main_init( void );
+extern void app_event_main_app_exception( void );
+extern void app_event_main_hal_exception( void );
+extern void app_event_main_osal_exception( void );
+extern void app_event_main_idle( void );
 
 #ifdef __cplusplus
 }
